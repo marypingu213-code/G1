@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>改錯字學習遊戲</title>
+<style>
+  body {
+    font-family: "Microsoft JhengHei", sans-serif;
+    background-color: #f9f9f9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+  }
+  h1 {
+    font-size: 3rem;
+    margin-bottom: 40px;
+  }
+  .sentence {
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+  }
+  .word {
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+  }
+  .word:hover {
+    background-color: #d0d0d0;
+  }
+  .options button {
+    margin: 15px;
+    padding: 20px 40px;
+    font-size: 2rem;
+    border: none;
+    border-radius: 10px;
+    background-color: #e0e0e0;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  .options button:hover {
+    background-color: #d0d0d0;
+  }
+  .result {
+    font-size: 2rem;
+    margin-top: 30px;
+    color: #007bff;
+  }
+  .next-btn {
+    margin-top: 40px;
+    padding: 15px 30px;
+    font-size: 1.8rem;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  .next-btn:hover {
+    background-color: #45a049;
+  }
+</style>
+</head>
+<body>
+
+<h1>改錯字學習遊戲</h1>
+<div class="sentence" id="sentence"></div>
+<div class="options" id="options"></div>
+<div class="result" id="result"></div>
+<button class="next-btn" id="nextBtn" onclick="nextQuestion()">下一題</button>
+
+<script>
+const questions = [
+  { sentence: "我都用又手ㄒ一ㄝˇ字。", wrong: "又", options: ["又", "右", "友"], answer: "右", correctSentence: "我都用右手寫字。" },
+  { sentence: "小金田在水裡ㄧㄡˊ來ㄧㄡˊ去。", wrong: "田", options: ["田", "魚", "由"], answer: "魚", correctSentence: "小金魚在水裡游來游去。" },
+  { sentence: "我喜歡兔子它喜歡金魚。", wrong: "兔子", options: ["也", "以", "呀"], answer: "也", correctSentence: "我喜歡兔子，它也喜歡金魚。" },
+  { sentence: "要不要跟我做朋有。", wrong: "有", options: ["有", "友", "又"], answer: "友", correctSentence: "要不要跟我做朋友。" },
+  { sentence: "外日人是ㄌㄩˋ色的。", wrong: "日", options: ["日", "星", "生"], answer: "星", correctSentence: "外星人是綠色的。" },
+  { sentence: "這個不日我的東西。", wrong: "日", options: ["日", "是", "時"], answer: "是", correctSentence: "這個不是我的東西。" },
+  { sentence: "老師悅上ㄎㄜˋ要ㄓㄨㄢ心。", wrong: "悅", options: ["悅", "說", "學"], answer: "說", correctSentence: "老師說上課要專心。" },
+  { sentence: "我有雨個眼睛和一個ㄅㄧˊ子。", wrong: "雨", options: ["雨", "兩", "亮"], answer: "兩", correctSentence: "我有兩個眼睛和一個鼻子。" },
+  { sentence: "這枝ㄅㄧˇ有好多東西，我們一起ㄕㄡ一ㄕㄡ。", wrong: "枝", options: ["枝", "地", "支"], answer: "地", correctSentence: "這支筆有好多東西，我們一起收一收。" }
+];
+
+let currentQuestion = 0;
+let selectedWord = null;
+
+function loadQuestion() {
+  const q = questions[currentQuestion];
+  const sentenceDiv = document.getElementById("sentence");
+  const optionsDiv = document.getElementById("options");
+  const resultDiv = document.getElementById("result");
+  optionsDiv.innerHTML = "";
+  resultDiv.textContent = "";
+  selectedWord = null;
+
+  const words = q.sentence.split("");
+  sentenceDiv.innerHTML = "";
+  words.forEach(char => {
+    const span = document.createElement("span");
+    span.textContent = char;
+    span.classList.add("word");
+    span.onclick = () => selectWord(char, span);
+    sentenceDiv.appendChild(span);
+  });
+}
+
+function selectWord(char, element) {
+  const q = questions[currentQuestion];
+  if (char === q.wrong) {
+    element.style.backgroundColor = "#ffeb3b";
+    showOptions();
+  } else {
+    document.getElementById("result").textContent = "❌ 這不是錯字，請再找找看！";
+  }
+}
+
+function showOptions() {
+  const q = questions[currentQuestion];
+  const optionsDiv = document.getElementById("options");
+  optionsDiv.innerHTML = "";
+  q.options.forEach(opt => {
+    const btn = document.createElement("button");
+    btn.textContent = opt;
+    btn.onclick = () => checkAnswer(opt);
+    optionsDiv.appendChild(btn);
+  });
+}
+
+function checkAnswer(choice) {
+  const q = questions[currentQuestion];
+  const result = document.getElementById("result");
+  if (choice === q.answer) {
+    result.textContent = "✅ 答對了！正確句子是：" + q.correctSentence;
+  } else {
+    result.textContent = "❌ 答錯了，再試一次！";
+  }
+}
+
+function nextQuestion() {
+  currentQuestion++;
+  if (currentQuestion < questions.length) {
+    loadQuestion();
+  } else {
+    document.getElementById("sentence").textContent = "🎉 全部完成！";
+    document.getElementById("options").innerHTML = "";
+    document.getElementById("result").textContent = "";
+    document.getElementById("nextBtn").style.display = "none";
+  }
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>
+
+這個版本讓學生先從句子中點選他認為的錯字，若選對才會出現三個選項供選擇正確字，整體字體與版面仍適合 16:9 螢幕教學使用。

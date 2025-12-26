@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>看注音寫國字遊戲</title>
+<style>
+  body {
+    font-family: "Microsoft JhengHei", sans-serif;
+    background-color: #f9f9f9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+  }
+  h1 {
+    font-size: 3rem;
+    margin-bottom: 40px;
+  }
+  .sentence {
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+  }
+  .options button {
+    margin: 15px;
+    padding: 20px 40px;
+    font-size: 2rem;
+    border: none;
+    border-radius: 10px;
+    background-color: #e0e0e0;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  .options button:hover {
+    background-color: #d0d0d0;
+  }
+  .result {
+    font-size: 2rem;
+    margin-top: 30px;
+    color: #007bff;
+  }
+  .next-btn {
+    margin-top: 40px;
+    padding: 15px 30px;
+    font-size: 1.8rem;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  .next-btn:hover {
+    background-color: #45a049;
+  }
+</style>
+</head>
+<body>
+
+<h1>看注音寫國字遊戲</h1>
+<div class="sentence" id="sentence"></div>
+<div class="options" id="options"></div>
+<div class="result" id="result"></div>
+<button class="next-btn" id="nextBtn" onclick="nextQuestion()">下一題</button>
+
+<script>
+const questions = [
+  { sentence: "我都用ㄧㄡˋ手寫字。", options: ["右", "左"], answer: "右", correctSentence: "我都用右手寫字。" },
+  { sentence: "小金魚在水ㄌㄧˇ游來游去。", options: ["你", "裡"], answer: "裡", correctSentence: "小金魚在水裡游來游去。" },
+  { sentence: "我喜歡兔子ㄧㄝˇ喜歡金魚。", options: ["也", "他"], answer: "也", correctSentence: "我喜歡兔子，也喜歡金魚。" },
+  { sentence: "要不要跟我做朋一ㄡˇ。", options: ["友", "有"], answer: "友", correctSentence: "要不要跟我做朋友。" },
+  { sentence: "外星人是ㄌㄩˋ色的。", options: ["綠", "紅"], answer: "綠", correctSentence: "外星人是綠色的。" },
+  { sentence: "這個不ㄕˋ我的東西。", options: ["是", "地"], answer: "是", correctSentence: "這個不是我的東西。" },
+  { sentence: "老師說上ㄎㄜˋ要ㄓㄨㄢ心。", options: ["說", "課"], answer: "課", correctSentence: "老師說上課要專心。" },
+  { sentence: "我有兩ㄍㄜˋ眼睛和一個ㄅㄧˊ子。", options: ["古", "個"], answer: "個", correctSentence: "我有兩個眼睛和一個鼻子。" },
+  { sentence: "地上好多東西，ㄨㄛˇ們一起ㄕㄡ一ㄕㄡ。", options: ["我", "找"], answer: "我", correctSentence: "地上好多東西，我們一起收一收。" }
+];
+
+let currentQuestion = 0;
+
+function loadQuestion() {
+  const q = questions[currentQuestion];
+  document.getElementById("sentence").textContent = q.sentence;
+  const optionsDiv = document.getElementById("options");
+  optionsDiv.innerHTML = "";
+  q.options.forEach(opt => {
+    const btn = document.createElement("button");
+    btn.textContent = opt;
+    btn.onclick = () => checkAnswer(opt);
+    optionsDiv.appendChild(btn);
+  });
+  document.getElementById("result").textContent = "";
+}
+
+function checkAnswer(choice) {
+  const q = questions[currentQuestion];
+  const result = document.getElementById("result");
+  if (choice === q.answer) {
+    result.textContent = "✅ 答對了！正確句子是：" + q.correctSentence;
+  } else {
+    result.textContent = "❌ 答錯了，再試一次！";
+  }
+}
+
+function nextQuestion() {
+  currentQuestion++;
+  if (currentQuestion < questions.length) {
+    loadQuestion();
+  } else {
+    document.getElementById("sentence").textContent = "🎉 全部完成！";
+    document.getElementById("options").innerHTML = "";
+    document.getElementById("result").textContent = "";
+    document.getElementById("nextBtn").style.display = "none";
+  }
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>
+
+這個版本是「看注音寫國字」遊戲，學生會看到句子中含有注音符號，從兩個選項中選出正確的國字，答對後會顯示完整正確句子。字體放大、版面適合 16:9 螢幕教學使用。
